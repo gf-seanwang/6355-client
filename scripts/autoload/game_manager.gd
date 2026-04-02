@@ -65,9 +65,9 @@ const WILD_SUB_AWARD_SUPER := 16
 const WILD_SUB_EXTEND_NORMAL := 17
 const WILD_SUB_EXTEND_SUPER := 18
 
-# Priority order: Mystery > Super Extend > Extend > Super Upgrade > Upgrade > MTP > Super Award > Award
+# Priority order: Super Extend > Extend > Super Upgrade > Upgrade > MTP > Super Award > Award
+# Mystery 的最高優先序由排序邏輯中 effect_type 檢查處理
 const WILD_EFFECT_PRIORITY := {
-	10: 0,  # Mystery (問號揭露，最高優先)
 	18: 1,  # Extend Super
 	17: 2,  # Extend Normal
 	14: 3,  # Upgrade Super

@@ -343,23 +343,23 @@ func animate_wild_effects(effects: Array, scnb: Array = []) -> void:
 		if bpos >= 0:
 			before_sids[bpos] = int(sd.get("sid", 0))
 
-	# Sort by WILD_EFFECT_PRIORITY (sub_type based)
-	var sorted_effects := effects.duplicate()
-	sorted_effects.sort_custom(func(a, b):
-		var pa: int = GameManager.WILD_EFFECT_PRIORITY.get(a.get("wild_sub_type", 0), 99)
-		var pb: int = GameManager.WILD_EFFECT_PRIORITY.get(b.get("wild_sub_type", 0), 99)
-		return pa < pb
-	)
+	# 保持後端順序，只把 mystery 移到最前
+	var sorted_effects: Array = []
+	var non_mystery: Array = []
+	for e in effects:
+		if e.get("effect_type", "") == GameManager.WILD_EFFECT_MYSTERY:
+			sorted_effects.append(e)
+		else:
+			non_mystery.append(e)
+	sorted_effects.append_array(non_mystery)
 
-	# Group consecutive effects with same wild_sub_type
-	# mystery 效果一定獨立分組（即使 sub_type 和後續效果相同）
+	# 用 effect_type 分組，確保同類效果一起播，mystery 獨立分組
 	var groups: Array = []  # Array of Arrays
 	var current_group: Array = []
 	var current_group_key: String = ""
 	for effect in sorted_effects:
-		var sub_type: int = effect.get("wild_sub_type", 0)
 		var etype: String = effect.get("effect_type", "")
-		var group_key: String = etype + str(sub_type) if etype == GameManager.WILD_EFFECT_MYSTERY else str(sub_type)
+		var group_key: String = etype
 		if group_key != current_group_key and current_group.size() > 0:
 			groups.append(current_group)
 			current_group = []

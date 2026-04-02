@@ -142,7 +142,9 @@ static func _decode_screen_info(buf: PackedByteArray) -> Dictionary:
 			101:  # we - repeated WildEffect
 				if f[1] == 2:
 					result["we"].append(_decode_wild_effect(f[2]))
-			# field 102 (wi) removed
+			102:  # oelims - repeated EliminateInfo (original cluster before wild effects)
+				if f[1] == 2:
+					result.get_or_add("oelims", []).append(_decode_eliminate_info(f[2]))
 	return result
 
 

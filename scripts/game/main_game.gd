@@ -115,24 +115,36 @@ func _process_round_results(results: Array) -> void:
 
 		var elims: Array = screen_info.get("elims", [])
 
-		# Wild effects first — so upgrade/extend complete before cluster highlights
-		if wild_effects.size() > 0:
-			GameManager.current_state = GameManager.GameState.WILD_EFFECTS
-			await grid.animate_wild_effects(wild_effects, scnb)
-			# Update grid to final screen after wild effects are done
-			if screen.size() > 0:
-				grid.set_screen(screen)
+		# 停轉後停頓，讓玩家看清原本的圖標
+		if stage == 1 and (elims.size() > 0 or wild_effects.size() > 0):
+			await get_tree().create_timer(0.8).timeout
 
-		# Highlight and animate eliminations (after wild effects)
-		if elims.size() > 0:
+		# 後端送 oelims = 原始叢集（Wild 效果前），elims = 最終叢集（Wild 效果後）
+		var oelims: Array = screen_info.get("oelims", [])
+		var initial_elims: Array = oelims if oelims.size() > 0 else elims
+
+		# 1. 原始叢集亮起
+		if initial_elims.size() > 0:
 			GameManager.current_state = GameManager.GameState.CASCADING
 			if stage > 1:
 				await get_tree().create_timer(0.5).timeout
-			grid.highlight_clusters(elims)
+			grid.highlight_clusters(initial_elims)
 			await get_tree().create_timer(0.5).timeout
-			await grid.animate_elimination(elims)
 
-			# Update win score
+		# 2. Wild 效果
+		if wild_effects.size() > 0:
+			GameManager.current_state = GameManager.GameState.WILD_EFFECTS
+			await grid.animate_wild_effects(wild_effects, scnb)
+			if screen.size() > 0:
+				grid.set_screen(screen)
+			# Wild 效果後，highlight 完整叢集（包含 extend/upgrade 擴展的位置）
+			if elims.size() > 0 and oelims.size() > 0:
+				grid.highlight_clusters(elims)
+				await get_tree().create_timer(0.5).timeout
+
+		# 3. 消除動畫
+		if elims.size() > 0:
+			await grid.animate_elimination(elims)
 			var ws: float = screen_info.get("ws", 0.0)
 			_current_round_win += ws
 

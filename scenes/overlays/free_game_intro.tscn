@@ -1,0 +1,52 @@
+[gd_scene format=3]
+
+[node name="FreeGameIntro" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+visible = false
+
+[node name="Dimmer" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0.7)
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 460.0
+offset_top = 250.0
+offset_right = 1460.0
+offset_bottom = 750.0
+
+[node name="TitleLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 460.0
+offset_top = 300.0
+offset_right = 1460.0
+offset_bottom = 420.0
+horizontal_alignment = 1
+vertical_alignment = 1
+text = "CONGRATULATIONS!"
+
+[node name="CountLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 460.0
+offset_top = 420.0
+offset_right = 1460.0
+offset_bottom = 560.0
+horizontal_alignment = 1
+vertical_alignment = 1
+text = "3 FREE SPINS"
+
+[node name="ContinueButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 810.0
+offset_top = 600.0
+offset_right = 1110.0
+offset_bottom = 660.0
+text = "CONTINUE"
